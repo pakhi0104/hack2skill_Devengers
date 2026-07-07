@@ -1,0 +1,11 @@
+export { searchOfficialSources, getAvailableSearchProvider } from './search/searchService';
+export type { SearchProvider } from './search/searchService';
+export { saveSearchHistory, fetchSearchHistory, deleteSearchHistoryEntry, clearAllSearchHistory } from './searchHistoryService';
+export { generateWithGemini, parseGeminiJson, isGeminiConfigured, searchWithGeminiGrounding } from './ai/geminiService';
+export { analyzeAndRankSchemes, filterRecommendations, rankByProfile } from './ai/recommendationEngine';
+export { compareSchemesWithAI, buildCompareRowsFromSchemes, getBestScheme } from './ai/comparisonEngine';
+export { generateRoadmap, generateDocumentChecklist, isReadyToApply } from './ai/roadmapGenerator';
+export { buildSearchQuery, buildAnalysisPrompt, TRUSTED_SOURCE_LABELS } from './ai/promptTemplates';
+export { savedSchemesService } from './savedSchemesService';
+export { applicationsService } from './applicationsService';
+export { notificationsService } from './notificationsService';

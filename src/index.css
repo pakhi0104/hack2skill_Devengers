@@ -1,0 +1,75 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  body {
+    @apply transition-colors duration-300;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 dark:bg-slate-800 rounded-full hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors;
+}
+
+/* Reusable Glassmorphism utility classes */
+.glassmorphism {
+  @apply bg-white/40 dark:bg-slate-900/40 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-glass dark:shadow-glass-dark;
+}
+
+.glassmorphism-hover {
+  @apply hover:bg-white/60 dark:hover:bg-slate-900/60 hover:shadow-glass-hover transition-all duration-300;
+}
+
+.glassmorphism-card {
+  @apply bg-white/60 dark:bg-slate-900/60 backdrop-blur-md border border-white/30 dark:border-white/10 shadow-glass;
+}
+
+/* Accent neon glows */
+.neon-glow-purple {
+  box-shadow: 0 0 50px -10px rgba(139, 92, 246, 0.2);
+}
+
+.neon-glow-emerald {
+  box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.15);
+}
+
+.neon-glow-brand {
+  box-shadow: 0 0 50px -10px rgba(99, 102, 241, 0.2);
+}
+
+/* Radial / Grid background patterns for premium look */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+}
+
+.dark .bg-grid-pattern {
+  background-image: 
+    linear-gradient(to right, rgba(99, 102, 241, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(99, 102, 241, 0.02) 1px, transparent 1px);
+}
+
+.bg-radial-gradient-light {
+  background: radial-gradient(circle at top right, rgba(232, 232, 255, 0.8) 0%, rgba(230, 255, 250, 0.5) 50%, rgba(245, 247, 255, 0.2) 100%);
+}
+
+.dark .bg-radial-gradient-light {
+  background: radial-gradient(circle at top right, rgba(30, 27, 75, 0.4) 0%, rgba(6, 78, 59, 0.2) 50%, rgba(15, 23, 42, 0.2) 100%);
+}
+
+/* Custom styles for animations */
+.transition-all-300 {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
