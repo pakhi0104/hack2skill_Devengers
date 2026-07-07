@@ -12,16 +12,13 @@ import { MatchScoreRing } from '../components/recommendations/MatchScoreRing';
 import { DocumentChecklist } from '../components/recommendations/DocumentChecklist';
 import {
   ClipboardList,
-  Sparkles,
   PlusCircle,
   FileText,
   Clock,
   CheckCircle2,
-  AlertCircle,
-  ExternalLink,
-  Eye,
-  ArrowRight,
   ArrowLeft,
+  ArrowRight,
+  Sparkles,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '../contexts/ToastContext';
@@ -61,21 +58,6 @@ export const ApplicationsPage: React.FC = () => {
     inProgress: applications.filter(a => 
       ['Preparing Documents', 'Applied', 'Under Review'].includes(a.current_status)).length,
     approved: applications.filter(a => a.current_status === 'Approved').length,
-  };
-
-  const getTimelineSteps = (app: any): TimelineStep[] => {
-    return STATUS_ORDER.map((status, index) => {
-      const currentIndex = STATUS_ORDER.indexOf(app.current_status);
-      const statusIndex = index;
-      let stepStatus: 'done' | 'active' | 'pending' = 'pending';
-      if (statusIndex < currentIndex) stepStatus = 'done';
-      if (statusIndex === currentIndex) stepStatus = 'active';
-      
-      return {
-        label: status,
-        status: stepStatus,
-      };
-    });
   };
 
   const toggleExpand = (id: string) => {
@@ -187,7 +169,7 @@ export const ApplicationsPage: React.FC = () => {
                       </div>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {app.category && <Badge variant="primary">{app.category}</Badge>}
-                        <Badge variant={STATUS_COLORS[app.current_status]}>{app.current_status}</Badge>
+                        <Badge variant={STATUS_COLORS[app.current_status] as any}>{app.current_status}</Badge>
                       </div>
                     </div>
                   </div>

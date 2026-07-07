@@ -1,5 +1,5 @@
 import { supabase, isSupabaseConfigured } from './supabaseClient';
-import type { Notification, NotificationType } from '../types';
+import type { Notification } from '../types';
 
 // Local storage keys for mock mode
 const MOCK_NOTIFICATIONS_KEY = 'schemematch_mock_notifications';

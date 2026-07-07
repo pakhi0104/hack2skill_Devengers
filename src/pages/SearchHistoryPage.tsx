@@ -32,7 +32,7 @@ export const SearchHistoryPage: React.FC = () => {
     success('Cleared', 'All search history has been deleted.');
   };
 
-  const handleReopenSearch = (category: string, query: string) => {
+  const handleReopenSearch = (category: string) => {
     navigate(`/search/${encodeURIComponent(category)}`);
   };
 
@@ -131,7 +131,7 @@ export const SearchHistoryPage: React.FC = () => {
                       <Button
                         size="sm"
                         variant="secondary"
-                        onClick={() => handleReopenSearch(entry.category, entry.query)}
+                        onClick={() => handleReopenSearch(entry.category)}
                         leftIcon={<ArrowRight className="w-3.5 h-3.5" />}
                       >
                         Reopen

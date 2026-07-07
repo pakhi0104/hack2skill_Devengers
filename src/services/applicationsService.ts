@@ -200,7 +200,7 @@ export const applicationsService = {
    * Add documents to an application
    */
   async addApplicationDocuments(
-    applicationId: string,
+    _applicationId: string,
     documents: Omit<ApplicationDocument, 'id' | 'updated_at'>[]
   ): Promise<ApplicationDocument[]> {
     const newDocs: ApplicationDocument[] = documents.map(doc => ({

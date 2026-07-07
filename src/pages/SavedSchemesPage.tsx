@@ -7,7 +7,7 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { SearchBar } from '../components/ui/SearchBar';
 import { Skeleton } from '../components/ui/Skeleton';
 import { MatchScoreRing } from '../components/recommendations/MatchScoreRing';
-import { Bookmark, ArrowRight, ExternalLink, Eye, GitCompare, Trash2 } from 'lucide-react';
+import { Bookmark, ExternalLink, Eye, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useToast } from '../contexts/ToastContext';
 import { useSavedSchemes } from '../hooks';

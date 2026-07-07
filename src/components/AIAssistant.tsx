@@ -84,8 +84,8 @@ ${JSON.stringify(context, null, 2)}`;
 
       let response = '';
 
-      if (isGeminiConfigured()) {
-        response = await generateWithGemini(inputValue.trim(), systemPrompt);
+      if (isGeminiConfigured) {
+        response = await generateWithGemini(systemPrompt);
       } else {
         response = "I'm here to help! To use my full AI capabilities, please configure your Gemini API key in the settings. For now, I can help you navigate the app and answer basic questions about SchemeMatch.";
       }

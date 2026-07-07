@@ -10,7 +10,6 @@ import {
   ExternalLink,
   Eye,
   GitCompare,
-  Bookmark,
   CheckCircle2,
   AlertCircle,
   Heart,

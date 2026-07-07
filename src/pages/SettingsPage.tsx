@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useToast } from '../contexts/ToastContext';
-import { 
-  useSearchHistory, 
-  useSavedSchemes 
+import {
+  useSearchHistory,
+  useSavedSchemes,
 } from '../hooks';
 import { AppLayout } from '../components/layout/AppLayout';
 import { Sidebar } from '../components/layout/Sidebar';
@@ -23,7 +23,6 @@ import {
   Settings,
   History,
   Bookmark,
-  Globe,
   Save,
   Lock
 } from 'lucide-react';
@@ -32,7 +31,7 @@ import { motion } from 'framer-motion';
 export const SettingsPage: React.FC = () => {
   const { theme, setTheme } = useTheme();
   const { signOut } = useAuth();
-  const { success, info, error } = useToast();
+  const { success, error } = useToast();
   const { clearHistory } = useSearchHistory();
   const { clearSavedSchemes } = useSavedSchemes();
   const navigate = useNavigate();

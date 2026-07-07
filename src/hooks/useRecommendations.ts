@@ -219,15 +219,11 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
     ineligible: [],
     nextSuggestions: [],
     roadmap: [
-      { id: '1', title: 'Check eligibility', description: 'Review eligibility criteria carefully' },
-      { id: '2', title: 'Gather documents', description: 'Collect all required documents' },
-      { id: '3', title: 'Apply online', description: 'Submit application via official portal' },
+      { step: 1, title: 'Check eligibility', description: 'Review eligibility criteria carefully' },
+      { step: 2, title: 'Gather documents', description: 'Collect all required documents' },
+      { step: 3, title: 'Apply online', description: 'Submit application via official portal' },
     ],
-    documentChecklist: recommendations[0]?.documents.map((doc, i) => ({
-      id: `doc-${i}`,
-      name: doc,
-      completed: false, // Start with none checked
-    })) || [],
+    documentChecklist: recommendations[0]?.documents || [],
     applicationReadiness: 0,
     missingDocuments: recommendations[0]?.documents || [],
     searchSources: ['Mock Source'],
