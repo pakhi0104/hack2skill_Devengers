@@ -46,6 +46,98 @@ function normalizeRecommendation(raw: Partial<SchemeRecommendation>, category: S
   };
 }
 
+function buildHeuristicRecommendation(
+  result: SearchResultItem,
+  category: SchemeCategory,
+  profile: Profile,
+  answers: CategoryAnswers
+): SchemeRecommendation {
+  const title = result.title.replace(/\s*-\s*.*/, '').trim();
+  const text = `${title} ${result.snippet}`.toLowerCase();
+  let score = 58;
+
+  if (category === 'Scholarships') {
+    if (text.includes('scholarship')) score += 12;
+    if (text.includes('means')) score += 4;
+    if (text.includes('merit')) score += 4;
+    if (profile.education) score += 3;
+  }
+
+  if (category === 'Education Loans') {
+    if (text.includes('vidyalaxmi')) score += 16;
+    if (text.includes('loan')) score += 8;
+    if (text.includes('education')) score += 6;
+    if (answers.loanAmount) score += 3;
+  }
+
+  if (category === 'Housing') {
+    if (text.includes('awas')) score += 10;
+    if (text.includes('housing')) score += 8;
+    if (text.includes('subsidy')) score += 5;
+  }
+
+  if (category === 'Startup') {
+    if (text.includes('startup')) score += 10;
+    if (text.includes('loan')) score += 6;
+    if (text.includes('entrepreneur')) score += 5;
+  }
+
+  if (category === 'Agriculture') {
+    if (text.includes('kisan')) score += 12;
+    if (text.includes('farmer')) score += 8;
+    if (text.includes('crop')) score += 4;
+  }
+
+  if (category === 'Women Welfare') {
+    if (text.includes('women')) score += 10;
+    if (text.includes('entrepreneur')) score += 5;
+    if (text.includes('welfare')) score += 4;
+  }
+
+  if (category === 'Employment') {
+    if (text.includes('employment')) score += 8;
+    if (text.includes('job')) score += 6;
+    if (text.includes('skill')) score += 4;
+  }
+
+  if (category === 'Senior Citizen') {
+    if (text.includes('pension')) score += 10;
+    if (text.includes('senior')) score += 8;
+    if (text.includes('retirement')) score += 4;
+  }
+
+  if (profile.state && text.includes(profile.state.toLowerCase())) score += 4;
+  if (profile.occupation && text.includes(profile.occupation.toLowerCase())) score += 3;
+  if (profile.category && profile.category !== 'Prefer not to say' && text.includes(profile.category.toLowerCase())) score += 2;
+
+  const matchScore = Math.min(100, Math.max(60, score));
+  const whyRecommended = [
+    `Strong match for ${category.toLowerCase()} searches`,
+    profile.state ? `Relevant for ${profile.state}` : 'Broadly relevant for your profile',
+  ];
+
+  return normalizeRecommendation(
+    {
+      id: `heuristic-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
+      name: title,
+      provider: result.source || 'Government of India',
+      category,
+      matchScore,
+      matchLevel: toMatchLevel(matchScore),
+      shortDescription: result.snippet.slice(0, 160) || `Scheme relevant to ${category}.`,
+      whyRecommended,
+      benefits: ['Government support', 'Officially listed scheme'],
+      eligibility: ['Eligibility depends on the specific scheme'],
+      documents: ['Aadhaar', 'Income proof or supporting documents'],
+      officialWebsite: result.url,
+      applyLink: result.url,
+      verified: true,
+      sourceUrl: result.url,
+    },
+    category
+  );
+}
+
 export async function analyzeAndRankSchemes(
   category: SchemeCategory,
   profile: Profile,
@@ -53,7 +145,26 @@ export async function analyzeAndRankSchemes(
   searchResults: SearchResultItem[]
 ): Promise<RecommendationResult> {
   if (!isGeminiConfigured) {
-    throw new Error('Gemini API key is required for AI analysis. Add VITE_GEMINI_API_KEY to .env');
+    const recommendations = searchResults
+      .map((result) => buildHeuristicRecommendation(result, category, profile, answers))
+      .sort((a, b) => b.matchScore - a.matchScore)
+      .slice(0, 8);
+
+    return {
+      recommendations,
+      ineligible: [],
+      nextSuggestions: [`Check official portals for other ${category.toLowerCase()} options`],
+      roadmap: [
+        { step: 1, title: 'Check eligibility', description: 'Review official eligibility criteria carefully' },
+        { step: 2, title: 'Prepare documents', description: 'Gather Aadhaar, income and education records' },
+        { step: 3, title: 'Apply online', description: 'Use the official website listed above' },
+      ],
+      documentChecklist: ['Aadhaar', 'Income proof', 'Category certificate if applicable'],
+      applicationReadiness: 70,
+      missingDocuments: ['Income proof'],
+      searchSources: searchResults.map((r) => r.source),
+      rawSearchCount: searchResults.length,
+    };
   }
 
   const prompt = buildAnalysisPrompt(category, profile, answers, searchResults);

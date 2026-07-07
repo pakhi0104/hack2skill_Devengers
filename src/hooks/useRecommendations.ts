@@ -21,16 +21,16 @@ const LOADING_MESSAGES: Record<AILoadingStage, string> = {
   complete: 'Preparing recommendations...',
 };
 
-// Mock sample data for when no search/AI APIs are configured
+// Broader fallback data for when searches are unavailable or rate-limited
 function getMockRecommendations(category: SchemeCategory): RecommendationResult {
   const mockSchemes: Record<SchemeCategory, SchemeRecommendation[]> = {
-    'Scholarships': [
+    Scholarships: [
       {
         id: 'mock-scholarship-1',
         name: 'Central Sector Scholarship Scheme',
         provider: 'Department of Higher Education',
         category: 'Scholarships',
-        matchScore: 85,
+        matchScore: 86,
         matchLevel: 'High Match',
         shortDescription: 'Merit-based scholarship for college and university students.',
         whyRecommended: ['Your academic profile matches the eligibility', 'Your state is covered'],
@@ -46,7 +46,7 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         name: 'Post Matric Scholarship for OBC Students',
         provider: 'Ministry of Social Justice',
         category: 'Scholarships',
-        matchScore: 70,
+        matchScore: 74,
         matchLevel: 'Medium Match',
         shortDescription: 'Financial assistance for OBC students studying beyond class 10.',
         whyRecommended: ['Your category matches the scheme', 'Eligible for post-matric studies'],
@@ -56,19 +56,50 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         officialWebsite: 'https://scholarships.gov.in',
         verified: true,
       },
+      {
+        id: 'mock-scholarship-3',
+        name: 'National Means Cum Merit Scholarship',
+        provider: 'Ministry of Education',
+        category: 'Scholarships',
+        matchScore: 72,
+        matchLevel: 'Medium Match',
+        shortDescription: 'Supports academically strong students from economically weaker families.',
+        whyRecommended: ['Good fit for lower-income students', 'Open to meritorious students'],
+        benefits: ['Monthly scholarship support', 'Covers school or college fees'],
+        eligibility: ['Merit-based', 'Family income threshold'],
+        documents: ['Income Certificate', 'Academic records', 'Aadhaar Card'],
+        officialWebsite: 'https://scholarships.gov.in',
+        verified: true,
+      },
     ],
     'Education Loans': [
       {
         id: 'mock-loan-1',
+        name: 'PM Vidyalaxmi Scheme',
+        provider: 'Vidya Lakshmi Portal',
+        category: 'Education Loans',
+        matchScore: 92,
+        matchLevel: 'High Match',
+        shortDescription: 'Government-backed student loan portal with access to multiple banks and subsidy options.',
+        whyRecommended: ['Strong fit for education loan seekers', 'Broad bank coverage'],
+        benefits: ['Access to multiple lenders', 'Simplified application'],
+        eligibility: ['Indian student', 'Admission to recognised course'],
+        documents: ['Admission Letter', 'Aadhaar Card', 'Pan Card'],
+        interestRate: 'Varies by lender',
+        officialWebsite: 'https://www.vidyalakshmi.co.in/Students/',
+        verified: true,
+      },
+      {
+        id: 'mock-loan-2',
         name: 'SBI Scholar Loan',
         provider: 'State Bank of India',
         category: 'Education Loans',
         matchScore: 88,
         matchLevel: 'High Match',
-        shortDescription: 'Low-interest education loan for premier institution admissions.',
+        shortDescription: 'Education loan for students pursuing higher studies in India and abroad.',
         whyRecommended: ['Looking for education loan', 'Your profile meets eligibility'],
-        benefits: ['Up to ₹40 lakh loan', 'Interest rate 10.00% - 10.50%', 'Moratorium period available'],
-        eligibility: ['Admission to premier institutions', 'Co-applicant required'],
+        benefits: ['Up to ₹40 lakh loan', 'Moratorium available'],
+        eligibility: ['Admission to recognised institutions', 'Co-applicant required'],
         documents: ['Admission Letter', 'Aadhaar Card', 'PAN Card', 'Co-applicant documents'],
         interestRate: '10.00% p.a.',
         processingTime: '7-10 days',
@@ -76,11 +107,26 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         verified: true,
       },
       {
-        id: 'mock-loan-2',
+        id: 'mock-loan-3',
+        name: 'ICICI Bank Education Loan',
+        provider: 'ICICI Bank',
+        category: 'Education Loans',
+        matchScore: 80,
+        matchLevel: 'High Match',
+        shortDescription: 'Flexible education financing for professional and overseas studies.',
+        whyRecommended: ['Good fit for higher studies', 'Multiple repayment options'],
+        benefits: ['Competitive interest rates', 'Covers tuition and living costs'],
+        eligibility: ['Eligible student applicant', 'Admission proof required'],
+        documents: ['Admission Letter', 'KYC documents', 'Fee structure'],
+        officialWebsite: 'https://www.icicibank.com/loans/education-loans',
+        verified: true,
+      },
+      {
+        id: 'mock-loan-4',
         name: 'Canara Bank Vidya Turant',
         provider: 'Canara Bank',
         category: 'Education Loans',
-        matchScore: 75,
+        matchScore: 76,
         matchLevel: 'Medium Match',
         shortDescription: 'Quick education loan for higher studies in India and abroad.',
         whyRecommended: ['Your academic profile fits'],
@@ -92,13 +138,13 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         verified: true,
       },
     ],
-    'Housing': [
+    Housing: [
       {
         id: 'mock-housing-1',
         name: 'Pradhan Mantri Awas Yojana (Urban)',
         provider: 'Ministry of Housing and Urban Affairs',
         category: 'Housing',
-        matchScore: 82,
+        matchScore: 84,
         matchLevel: 'High Match',
         shortDescription: 'Affordable housing with interest subsidy for urban areas.',
         whyRecommended: ['Your income bracket fits', 'First-time home buyer'],
@@ -108,14 +154,29 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         officialWebsite: 'https://pmaymis.gov.in',
         verified: true,
       },
+      {
+        id: 'mock-housing-2',
+        name: 'Pradhan Mantri Awas Yojana (Gramin)',
+        provider: 'Ministry of Rural Development',
+        category: 'Housing',
+        matchScore: 78,
+        matchLevel: 'Medium Match',
+        shortDescription: 'Housing support for rural households and beneficiaries.',
+        whyRecommended: ['Good fit for rural applicants', 'Supports affordable housing'],
+        benefits: ['Financial assistance', 'Construction support'],
+        eligibility: ['Rural household', 'Eligible beneficiary'],
+        documents: ['Aadhaar Card', 'Income proof', 'Land documents'],
+        officialWebsite: 'https://pmayg.nic.in',
+        verified: true,
+      },
     ],
-    'Startup': [
+    Startup: [
       {
         id: 'mock-startup-1',
         name: 'Standup India Scheme',
         provider: 'Department of Financial Services',
         category: 'Startup',
-        matchScore: 80,
+        matchScore: 82,
         matchLevel: 'High Match',
         shortDescription: 'Bank loan between ₹10 lakh to ₹1 crore for SC/ST/Women entrepreneurs.',
         whyRecommended: ['Startup-focused', 'Your category may be eligible'],
@@ -125,8 +186,23 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         officialWebsite: 'https://standupmitra.in',
         verified: true,
       },
+      {
+        id: 'mock-startup-2',
+        name: 'Startup India Seed Fund Scheme',
+        provider: 'Startup India',
+        category: 'Startup',
+        matchScore: 76,
+        matchLevel: 'Medium Match',
+        shortDescription: 'Seed funding support for innovative early-stage startups.',
+        whyRecommended: ['Good fit for new ventures', 'Supports prototype development'],
+        benefits: ['Seed funding', 'Mentorship support'],
+        eligibility: ['Recognised startup', 'Early-stage venture'],
+        documents: ['Startup certificate', 'Business plan', 'KYC'],
+        officialWebsite: 'https://seedfund.startupindia.gov.in',
+        verified: true,
+      },
     ],
-    'Agriculture': [
+    Agriculture: [
       {
         id: 'mock-agri-1',
         name: 'PM Kisan Samman Nidhi',
@@ -142,6 +218,21 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         officialWebsite: 'https://pmkisan.gov.in',
         verified: true,
       },
+      {
+        id: 'mock-agri-2',
+        name: 'Pradhan Mantri Fasal Bima Yojana',
+        provider: 'Ministry of Agriculture',
+        category: 'Agriculture',
+        matchScore: 81,
+        matchLevel: 'High Match',
+        shortDescription: 'Crop insurance for farmers against weather and crop loss.',
+        whyRecommended: ['Useful for crop-based risk coverage', 'Farmer support'],
+        benefits: ['Premium subsidy', 'Crop loss coverage'],
+        eligibility: ['Registered farmer', 'Insurable crop'],
+        documents: ['Farmer ID', 'Land records', 'Crop details'],
+        officialWebsite: 'https://pmfby.gov.in',
+        verified: true,
+      },
     ],
     'Women Welfare': [
       {
@@ -151,7 +242,7 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         category: 'Women Welfare',
         matchScore: 85,
         matchLevel: 'High Match',
-        shortDescription: 'Online marketing platform for women entrepreneurs.',
+        shortDescription: 'Online marketplace for women entrepreneurs.',
         whyRecommended: ['Woman-owned business or aspiring entrepreneur'],
         benefits: ['Free online platform', 'Pan-India visibility'],
         eligibility: ['Woman entrepreneur (18+)', 'Product/service offering'],
@@ -159,8 +250,23 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         officialWebsite: 'https://mahilaehaat-rmk.gov.in',
         verified: true,
       },
+      {
+        id: 'mock-women-2',
+        name: 'Beti Bachao Beti Padhao',
+        provider: 'Women and Child Development',
+        category: 'Women Welfare',
+        matchScore: 77,
+        matchLevel: 'Medium Match',
+        shortDescription: 'Programme focused on improving girl child education and welfare.',
+        whyRecommended: ['Good fit for girl child welfare support', 'Focus on education'],
+        benefits: ['Education support', 'Awareness and outreach'],
+        eligibility: ['Girls and families in target geographies'],
+        documents: ['Aadhaar Card', 'Residence proof'],
+        officialWebsite: 'https://wcd.nic.in',
+        verified: true,
+      },
     ],
-    'Employment': [
+    Employment: [
       {
         id: 'mock-employment-1',
         name: 'Pradhan Mantri Rojgar Protsahan Yojana',
@@ -174,6 +280,21 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         eligibility: ['New employee earning < ₹15,000/month', 'Working in eligible establishment'],
         documents: ['Aadhaar Card', 'UAN', 'Employment details'],
         officialWebsite: 'https://pmrpy.gov.in',
+        verified: true,
+      },
+      {
+        id: 'mock-employment-2',
+        name: 'Skill India Mission',
+        provider: 'NSDC',
+        category: 'Employment',
+        matchScore: 74,
+        matchLevel: 'Medium Match',
+        shortDescription: 'Skill-based training programmes for youth and job seekers.',
+        whyRecommended: ['Useful for upskilling and employment'],
+        benefits: ['Training support', 'Job readiness'],
+        eligibility: ['Youth or job seekers'],
+        documents: ['Aadhaar Card', 'Education proof'],
+        officialWebsite: 'https://www.nsdcindia.org',
         verified: true,
       },
     ],
@@ -191,6 +312,21 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
         eligibility: ['Age 60+'],
         documents: ['Age proof', 'Aadhaar Card', 'PAN Card', 'Bank details'],
         officialWebsite: 'https://licindia.in',
+        verified: true,
+      },
+      {
+        id: 'mock-senior-2',
+        name: 'Atal Pension Yojana',
+        provider: 'PFRDA',
+        category: 'Senior Citizen',
+        matchScore: 85,
+        matchLevel: 'High Match',
+        shortDescription: 'Affordable pension scheme for workers in the unorganised sector.',
+        whyRecommended: ['Good fit for long-term retirement planning'],
+        benefits: ['Guaranteed pension', 'Low contribution'],
+        eligibility: ['Age 18-40', 'Eligible subscriber'],
+        documents: ['Aadhaar Card', 'Bank details', 'Mobile number'],
+        officialWebsite: 'https://www.atalpensionyojana.gov.in',
         verified: true,
       },
     ],
@@ -226,8 +362,8 @@ function getMockRecommendations(category: SchemeCategory): RecommendationResult 
     documentChecklist: recommendations[0]?.documents || [],
     applicationReadiness: 0,
     missingDocuments: recommendations[0]?.documents || [],
-    searchSources: ['Mock Source'],
-    rawSearchCount: 5,
+    searchSources: ['Expanded fallback catalog'],
+    rawSearchCount: recommendations.length,
   };
 }
 
@@ -264,35 +400,29 @@ export function useRecommendations() {
 
         let recommendationResult: RecommendationResult;
         const provider = getAvailableSearchProvider();
-        
-        if (provider === 'none') {
-          // Use mock data when no search/AI APIs are configured
-          recommendationResult = getMockRecommendations(category);
-        } else {
-          try {
-            const { results, query } = await searchOfficialSources(category, profile, answers);
-            
-            setStage('analyzing');
-            await new Promise((r) => setTimeout(r, 500));
-            
-            setStage('comparing');
-            recommendationResult = await analyzeAndRankSchemes(category, profile, answers, results);
-            
-            if (user?.id) {
-              await saveSearchHistory(
-                user.id,
-                category,
-                query,
-                answers,
-                recommendationResult.recommendations.length,
-                `${recommendationResult.recommendations.length} schemes found`
-              );
-            }
-          } catch (searchErr) {
-            // Fall back to mock data if search/AI fails
-            console.warn('Search/AI failed, using mock data:', searchErr);
-            recommendationResult = getMockRecommendations(category);
+
+        try {
+          const { results, query } = await searchOfficialSources(category, profile, answers);
+
+          setStage('analyzing');
+          await new Promise((r) => setTimeout(r, 500));
+
+          setStage('comparing');
+          recommendationResult = await analyzeAndRankSchemes(category, profile, answers, results);
+
+          if (user?.id) {
+            await saveSearchHistory(
+              user.id,
+              category,
+              query,
+              answers,
+              recommendationResult.recommendations.length,
+              `${recommendationResult.recommendations.length} schemes found`
+            );
           }
+        } catch (searchErr) {
+          console.warn('Search/AI failed, using expanded fallback data:', searchErr);
+          recommendationResult = getMockRecommendations(category);
         }
 
         setStage('roadmap');
