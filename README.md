@@ -1,5 +1,7 @@
 🚀 SchemeMatch AI
+
 Don't Search. Get Matched.
+
 https://aischemematch.netlify.app/
 
 📖 Project Overview
@@ -38,10 +40,12 @@ The goal of SchemeMatch AI is to make government benefits more accessible, trans
 🌙 Modern responsive UI with Light & Dark mode
 
 🎯 Problem Statement
+
 Government schemes and welfare programs are spread across multiple websites, making them difficult to discover and compare. Many eligible citizens miss opportunities because they are unaware of available benefits or struggle to understand complex eligibility requirements.
 SchemeMatch AI addresses this challenge by acting as an intelligent digital advisor that personalizes recommendations, simplifies eligibility checks, and guides users throughout the application process using trusted official information.
 
 💡 Vision
+
 To become a one-stop AI assistant that empowers every citizen to easily discover, understand, compare, and apply for government benefits through a personalized, transparent, and user-friendly experience.
 
 
